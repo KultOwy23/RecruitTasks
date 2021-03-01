@@ -7,7 +7,7 @@ Jesteś kierowcą, potrzebujemy zapisywac informacje o przejazdach, ilość prze
 - [ ] Stwórz API zgodnie z załączoną dokumentacją  (Node.js + Express)
   - [ ] Brak wymogu autoryzacji.
 - [ ] Napisane testy jednostkowe dla kodu (Mocha + Chai)
-- [ ] Walidacja parametrów wejściowych.
+- [x] Walidacja parametrów wejściowych. (express-validator)
 
 ## Wymagane endpointy:
 1. Dodawanie przejazdu z parametrami:
