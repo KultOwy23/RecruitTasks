@@ -30,6 +30,23 @@ describe('Adding routes to history', () => {
                     done();
                 });
         });
+
+        it("should return error for invalid input", (done) => {
+            chai.request(app)
+                .put('/journeys')
+                .set('content-type','application/json')
+                .set({
+                    date: "2012-04-23T18:25:43.511Z",
+                    startAddress: "Nice",
+                    stopAddress: "Here is stop",
+                    price: '1231.111'
+                })
+                .end((_, res) => {
+                    res.should.have.status(500);
+                    assert.strictEqual('Invalid input parameters',res.body.error);
+                    done();
+                });
+        });
     })
 });
 

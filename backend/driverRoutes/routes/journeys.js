@@ -8,16 +8,26 @@ var router = express.Router();
 // });
 
 router.put('/', [
-    check('startAddress').not().isEmpty(),
-    check('stopAddress').not().isEmpty(),
-    check('price').not().isEmpty(),
+    check('startAddress')
+        .not().isEmpty()
+        .withMessage('is required'),
+    check('stopAddress')
+        .not().isEmpty()
+        .withMessage('is required'),
+    check('price')
+        .not().isEmpty()
+        .withMessage('is required')
+        .not().isNumeric()
+        .withMessage('should be numeric'),
     check('date')
         .not().isEmpty()
-        .isDate()
-        .withMessage('Should be date'),
+        .withMessage('is required'),
 ], function(req, res, next) {
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
+        errors.array().forEach(err => {
+            console.log(`Err: ${err.param} ${err.msg}`);
+        });
         throw new Error('Invalid input parameters');
     }
     const {startAddress, stopAddress, price, date} = req.body;

@@ -20,8 +20,7 @@ router.get('/daily', [
 router.get('/daterange', [
   check('startDate')
     .not().isEmpty()
-    .isDate()
-    .withMessage('Should be date'),
+    .withMessage("is required"),
   check('endDate')
     .not().isEmpty()
     .isDate()
