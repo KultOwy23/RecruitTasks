@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+div {
+  width: 500px;
+  height: 500px;
+  border: 1px solid black;
+}
+</style>
+</head>
+<body>
+<h1>Canvas</h1>
+<div onclick="toggleRecorder(event)" onmousemove="myFunction(event)"></div>
+<p id="demo"></p>
+
+<hr>
+<h1>Wymagania</h1>
+<p>Stwórz stronę internetową z wyznaczonym obszarem wielkosci 500x500px, który będzie zbierał punkty po których przesunięto wskaznik myszy.</p>
+
+<ul>
+    <li>Po kliknięciu obszaru zaczynamy zbierać punkty</li>
+    <li>Podczas przesuwania myszy zbieramy punkty</li>
+    <li>Po ponownym kliknięciu przerywamy i wypisujemy zebrane punkty pod obszarem</li>
+</ul>
+
+
+<script>
+var recording = false;
+var points = [];
+function toggleRecorder(e) {
+    recording = !recording;
+    if(!recording) {
+        document.getElementById("demo").innerHTML = `Points: ${points.join('\n')}`;
+        points = [];
+    } else {
+        points.push(`(${e.clientX},${e.clientY})`);
+    }
+}
+
+function myFunction(e) {
+    if(recording) {
+        points.push(`(${e.clientX},${e.clientY})`);
+    }
+}
+
+</script>
+
+</body>
+</html>
