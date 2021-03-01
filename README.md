@@ -41,8 +41,9 @@ Gdy jesteśmy zalogowani, na belce pokazujemy nazwę użytkownika a w popup-menu
 - less/scss
 - opcjonalnie testy jednostkowe
 
+--- 
 
-### III. Zadanie frontendowe
+## III. Zadanie frontendowe
 Stwórz stronę internetową z wyznaczonym obszarem wielkosci 500x500px, który będzie zbierał punkty po których przesunięto wskaznik myszy.
 1. Po kliknięciu obszaru zaczynamy zbierać punkty
 2. Podczas przesuwania myszy zbieramy punkty
