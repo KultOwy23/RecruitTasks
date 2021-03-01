@@ -6,7 +6,7 @@ Jesteś kierowcą, potrzebujemy zapisywac informacje o przejazdach, ilość prze
 - [x] Użyj GITa do rozwoju proijektu
 - [ ] Stwórz API zgodnie z załączoną dokumentacją  (Node.js + Express)
   - [ ] Brak wymogu autoryzacji.
-- [ ] Napisane testy jednostkowe dla kodu (Mocha)
+- [ ] Napisane testy jednostkowe dla kodu (Mocha + Chai)
 - [ ] Walidacja parametrów wejściowych.
 
 ## Wymagane endpointy:
