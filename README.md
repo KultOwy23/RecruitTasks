@@ -27,7 +27,7 @@ Walidacja parametrów wejściowych.
 - na wyjściu suma ilości kilometrów oraz całkowity koszt
 - na wyjściu średnia ilośc kilometów i koszt per dzień
 
-============================================
+---
 
 
 ## II. Zadanie frontendowe:
