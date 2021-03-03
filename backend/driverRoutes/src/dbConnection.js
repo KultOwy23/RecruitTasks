@@ -8,4 +8,5 @@ let db = new sqlite3.Database('./db/journeys.db', sqlite3.OPEN_READWRITE, (err) 
   console.log('Connected to the journeys database.');
 });
 
+db.run('CREATE TABLE IF NOT EXISTS journeys(date DATE, startAddress TEXT, stopAddress TEXT, price REAL)');
 module.exports = db;

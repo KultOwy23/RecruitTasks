@@ -1,5 +1,6 @@
 var express = require('express');
 const { check, validationResult } = require('express-validator');
+const db = require('../src/dbConnection');
 var router = express.Router();
 
 /* GET users listing. */
@@ -16,12 +17,13 @@ router.put('/', [
         .withMessage('is required'),
     check('price')
         .not().isEmpty()
-        .withMessage('is required')
-        .not().isNumeric()
-        .withMessage('should be numeric'),
+        .isDecimal()
+        .withMessage('Is required, and has to be decimal'),
     check('date')
         .not().isEmpty()
-        .withMessage('is required'),
+        .withMessage('is required')
+        .isDate()
+        .withMessage('Should be a date in format YYYY/MM/DD')
 ], function(req, res, next) {
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
@@ -30,7 +32,19 @@ router.put('/', [
         });
         throw new Error('Invalid input parameters');
     }
-    const {startAddress, stopAddress, price, date} = req.body;
+    const {startAddress, stopAddress, price, date } = req.body;
+    db.serialize(() => {
+        db.run(
+            "INSERT INTO journeys(date,startAddress,stopAddress,price) VALUES(?,?,?,?)",
+            [date,startAddress,stopAddress,price],
+            (err) => {
+                if(err) {
+                    console.log(err);
+                    throw new Error('Could not save the data');
+                }
+                res.status(200).send({message: 'Journey saved!'});
+            });
+    });
 });
 
 module.exports = router;
