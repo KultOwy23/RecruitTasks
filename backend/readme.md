@@ -4,10 +4,10 @@ Jesteś kierowcą, potrzebujemy zapisywac informacje o przejazdach, ilość prze
 
 ## Wymagania:
 - [x] Użyj GITa do rozwoju proijektu
-- [ ] Stwórz API zgodnie z załączoną dokumentacją  (Node.js + Express)
-  - [ ] Brak wymogu autoryzacji.
-- [ ] Napisane testy jednostkowe dla kodu (Mocha + Chai)
-- [x] Walidacja parametrów wejściowych. (express-validator)
+- [x] Stwórz API zgodnie z załączoną dokumentacją  (Node.js + Express)
+  - [x] Brak wymogu autoryzacji.
+- [x] Napisane testy jednostkowe dla kodu ([Mocha](https://www.npmjs.com/package/mocha) + [Chai](https://www.npmjs.com/package/chai), Test coverage: [nyc](https://www.npmjs.com/package/nyc))
+- [x] Walidacja parametrów wejściowych. ([express-validator](https://www.npmjs.com/package/express-validator))
 
 ## Wymagane endpointy:
 1. Dodawanie przejazdu z parametrami:
