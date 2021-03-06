@@ -9,10 +9,10 @@ var router = express.Router();
 // });
 
 router.put('/', [
-    check('startAddress')
+    check('originAddress')
         .not().isEmpty()
         .withMessage('is required'),
-    check('stopAddress')
+    check('destinationAddress')
         .not().isEmpty()
         .withMessage('is required'),
     check('price').isDecimal()
@@ -27,15 +27,12 @@ router.put('/', [
             throw new Error('Invalid input parameters');
         });
     }
-    try {
-        const { startAddress, stopAddress, price, date } = req.body;
-        saveJourney(startAddress, stopAddress, price, date);
+    saveJourney(req.body, (err, _) => {
+        if(err) {
+            throw Error(`Save failed: ${err}`);
+        }
         res.status(200).send({message: 'Saved journey!'});
-    } catch(err) {
-        throw new Error(`Save failed: ${err}`);
-    }
-
-
+    });
 });
 
 module.exports = router;

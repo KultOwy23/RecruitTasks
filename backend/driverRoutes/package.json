@@ -7,10 +7,12 @@
     "test": "nyc mocha"
   },
   "dependencies": {
+    "@googlemaps/google-maps-services-js": "^3.1.16",
     "chai": "^4.3.0",
     "chai-http": "^4.3.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
+    "distance-matrix-api": "^1.0.0",
     "express": "~4.16.1",
     "express-validator": "^6.10.0",
     "http-errors": "~1.6.3",

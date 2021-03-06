@@ -1,10 +1,10 @@
 const e = require('express');
 var express = require('express');
 const { check, body, validationResult } = require('express-validator');
-const { db } = require('../src/dbConnection');
+const  dbConn  = require('../src/dbConnection');
 var router = express.Router();
 
-const dailySql = "SELECT SUM(price) as totalPrice FROM journeys WHERE date = ?";
+// const dailySql = "SELECT SUM(price) as totalPrice, SUM(distance) as totalDistance FROM journeys WHERE date = ?";
 
 /* GET users listing. */
 router.get('/daily', [
@@ -18,19 +18,14 @@ router.get('/daily', [
     throw Error('Invalid input');
   }
   const { date } = req.body;
-  db.serialize(() => {
-    db.get(dailySql, date, (err, row) => {
-      if(err) {
-        throw err;
-      }
-      let report = {}
-      if(row.totalPrice) {
-        report = row;
-      }
   
-      res.status(200).send(report);
-    })
-  })
+  report = dbConn.getDailyReport(date, (err,report) => {
+    if(err) {
+      throw Error(err);
+    }
+    console.log(`Report: ${report}`);
+    res.status(200).send(report);
+  });
 });
 
 router.get('/daterange', [
@@ -44,7 +39,7 @@ router.get('/daterange', [
       throw new Error('EndDate is required');
     }
     if(startDate.getTime() >= endDate.getTime()) {
-      throw new Error('EndDate must be after the startDate');
+      throw new Error('EndDate must (startDate, endDatebe after the startDate');
     }
 
     return true;
@@ -58,10 +53,14 @@ router.get('/daterange', [
     });
     throw Error('Invalid input parameters');
   };
-  const { startDate, endDate } = req.body;
-
-  // let report = dbConn.getReportForDateRange(startDate, endDate);
-  res.status(200).send({});
+  
+  dbConn.getDateRangeReport(req.body, (err, report) => {
+    if(err) {
+      console.log(err);
+      throw Error(err);
+    }
+    res.status(200).send(report);
+  });
 });
 
 module.exports = router;
