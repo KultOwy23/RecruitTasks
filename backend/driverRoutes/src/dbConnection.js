@@ -3,7 +3,7 @@ const {Client} = require("@googlemaps/google-maps-services-js");
 const client = new Client({});
 
 const dailySql = "SELECT SUM(price) as totalPrice, SUM(distance) as totalDistance FROM journeys WHERE date = ?";
-const dateRangeSql = "SELECT * FROM journeys WHERE date > ? AND date < ?";
+const dateRangeSql = "SELECT SUM(price) as totalPrice, SUM(distance) as totalDistance FROM journeys WHERE date > ? AND date < ?";
 const deleteSql = "DELETE FROM journeys WHERE date = ?"
 // open the database
 let db = new sqlite3.Database('./db/journeys.db', sqlite3.OPEN_READWRITE, (err) => {

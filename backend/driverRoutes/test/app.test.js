@@ -16,6 +16,7 @@ describe('Distance calculation testing', () => {
             done();
           })
           .catch(err => {
+            console.log(`Distance failure: ${err}`)
             done(err);
           });
     });
