@@ -15,52 +15,50 @@ router.get('/daily', [
   const errors = validationResult(req);
 
   if(!errors.isEmpty()) {
-    throw Error('Invalid input');
-  }
-  const { date } = req.body;
-  
-  report = dbConn.getDailyReport(date, (err,report) => {
-    if(err) {
+    res.status(500).json({errors: errors.array()});
+  } else {
+    const { date } = req.body;
+    console.log(`DailyReport: ${date}`);
+    dbConn.getDailyReport(date).then(report => {
+      res.status(200).send(report);
+    }).catch(err => {
       throw Error(err);
-    }
-    console.log(`Report: ${report}`);
-    res.status(200).send(report);
-  });
+    })
+  }
 });
 
 router.get('/daterange', [
   body('endDate').toDate(),
   check('startDate').toDate().custom((startDate, {req}) => {
     const { endDate } = req.body;
+    const errors = [];
     if(!startDate) {
-      throw new Error('StartDate is required');
+      errors.push('StartDate is required');
     } 
     if(!endDate) {
-      throw new Error('EndDate is required');
+      errors.push('EndDate is required');
     }
     if(startDate.getTime() >= endDate.getTime()) {
-      throw new Error('EndDate must (startDate, endDatebe after the startDate');
+      errors.push('EndDate must (startDate, endDatebe after the startDate');
     }
-
+    if(errors.length > 0) {
+      throw new Error(errors.join(','));
+    }
     return true;
   })
 ], function(req, res, next) {
   const errors = validationResult(req);
 
   if(!errors.isEmpty()) {
-    errors.array().forEach(err => {
-      console.log(`Err: ${err.param} ${err.msg}`);
-    });
-    throw Error('Invalid input parameters');
-  };
-  
-  dbConn.getDateRangeReport(req.body, (err, report) => {
-    if(err) {
-      console.log(err);
+    res.status(500).json({ errors: errors.array()});
+  } else {
+    dbConn.getDateRangeReport(req.body).then(report => {
+      res.status(200).send(report)
+    }).catch(err => {
       throw Error(err);
-    }
-    res.status(200).send(report);
-  });
+    })
+  }
+  
 });
 
 module.exports = router;

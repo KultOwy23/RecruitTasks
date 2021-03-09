@@ -1,26 +1,26 @@
-const assert = require('assert');
-const app = require('../app');
-const chai = require('chai');
-const chai_http = require('chai-http');
-const dbConn = require('../src/dbConnection');
-const { check } = require('express-validator');
-const { expect } = require('chai');
+const assert = require("assert");
+const app = require("../app");
+const chai = require("chai");
+const chai_http = require("chai-http");
+const dbConn = require("../src/dbConnection");
+const { check } = require("express-validator");
+const { expect } = require("chai");
 
 chai.use(chai_http);
 chai.should();
 
-describe('General app tests', () => {
-    it('should return 404 for undefined route', (done) => {
+describe("General app tests", () => {
+    it("should return 404 for undefined route", (done) => {
         chai.request(app)
-            .get('/unknown')
+            .get("/unknown")
             .end((_, res) => {
                 res.should.have.status(404);
                 done();
             });
     });
-    it('should be okay for default address', (done) => {
+    it("should be okay for default address", (done) => {
         chai.request(app)
-            .get('/')
+            .get("/")
             .end((_, res) => {
                 res.should.have.status(200);
                 done();
@@ -29,43 +29,74 @@ describe('General app tests', () => {
 });
 
 
-describe('Adding routes to history', () => {
-    describe('Input validation', () => {
+describe("Adding routes to history", () => {
+    describe("Input validation", () => {
         it("should return error for no input", (done) => {
             chai.request(app)
-                .put('/journeys')
+                .put("/journeys")
                 .end((_, res) => {
                     res.should.have.status(500);
-                    assert.strictEqual('Invalid input parameters',res.body.error);
+                    expect(res.body.error).to.not.be.null;
+                    expectedErrorMessages = [
+                        {"msg": "is required", "param": "originAddress", "location": "body"},
+                        {"msg": "is required", "param": "destinationAddress", "location": "body"},
+                        {"msg": "Is required, and has to be decimal", "param": "price", "location": "body"},
+                        {"msg": "Should be a date in format YYYY/MM/DD", "param": "date", "location": "body"}
+                    ]
+                    expect(res.body.errors).to.eql(expectedErrorMessages);
                     done();
                 });
         });
 
         it("should return error for invalid input", (done) => {
             chai.request(app)
-                .put('/journeys')
-                .set('content-type','application/json')
+                .put("/journeys")
+                .set("content-type","application/json")
                 .send({
                     date: "ABCD",
                     originAddress: "Nice",
                     destinationAddress: "Here is stop",
-                    price: '1231.11'
+                    price: "12A"
                 })
                 .end((err, res) => {
                     res.should.have.status(500);
                     expect(res.body.error).to.not.be.null;
-                    assert.strictEqual('Invalid input parameters',res.body.error);
+                    expectedErrorMessages = [
+                        {"value": "12A", "msg": "Is required, and has to be decimal", "param": "price", "location": "body"},
+                        {"value": "ABCD", "msg": "Should be a date in format YYYY/MM/DD", "param": "date", "location": "body"}
+                    ]
+                    expect(res.body.errors).to.eql(expectedErrorMessages);
                     done();
                 });
         });
     })
+    describe('Saving journeys validation', () => {
+        it("should save the journey with valid data", (done) => {
+            chai.request(app)
+                .put("/journeys")
+                .set("content-type","application/json")
+                .send({
+                    date: "2021/03/07",
+                    originAddress: "San Francisco, CA",
+                    destinationAddress: "San Diego, CA",
+                    price: 200.99
+                })
+                .end((err, res) => {
+                    res.should.have.status(200)
+                    expect(res.body).to.not.be.null;
+                    expect(res.body.message).to.be.eql("Saved journey!");
+                    expect(res.body.distance).to.be.eql(807283)
+                    done();
+                })
+        });
+    })
 });
 
-describe('Get daily report', () => {
-    describe('Input validation', () => {
+describe("Get daily report", () => {
+    describe("Input validation", () => {
         it("should return error for no input", (done) => {
             chai.request(app)
-                .get('/reports/daily')
+                .get("/reports/daily")
                 .end((_, res) => {
                     res.should.have.status(500);
                     done();
@@ -74,43 +105,38 @@ describe('Get daily report', () => {
 
         it("should return error for invalid input", (done) => {
             chai.request(app)
-                .get('/reports/daily')
-                .set('content-type','application/json')
+                .get("/reports/daily")
+                .set("content-type","application/json")
                 .send({
                     date: "ABCD",
                 })
                 .end((_, res) => {
+                    const expectedErrorMessages = [
+                        {"value": "ABCD", "msg": "has to be date", "param": "date", "location": "body"}
+                    ]
                     res.should.have.status(500);
+                    expect(res.body.errors).to.eql(expectedErrorMessages);
                     done();
                 });
         });
     });
 
-    describe('Functionality testing', () => {
-        let testDate = "1234/05/06";
+    describe("Functionality testing", () => {
+        let testDate = "2077/03/01";
         before(() => {
             dbConn.removeRecords(testDate);
-            console.log(`Before test`);
-            return new Promise((resolve) => {
-                // myCallback = (err, res) => {
-                //     if(err) {
-                //         throw Error(err);
-                //     }
-                //     console.log(`My callback: ${res}`);
-                //     resolve(res);
-                // }
-                const params = {
-                    originAddress: "San Francisco, CA",
-                    destinationAddress: "San Diego, CA",
-                    price: 100.00,
-                    date: testDate,
-                    
-                }
-                dbConn.saveJourney(params, () => {
-                    params.price = 200.23,
-                    dbConn.saveJourney(params, resolve);
-                });
-            }, 2000);
+            const params = {
+                originAddress: "San Francisco, CA",
+                destinationAddress: "San Diego, CA",
+                price: 100.00,
+                date: testDate,
+                
+            }
+            return dbConn.saveJourney(params).then(() => {
+                params.price = 200.23;
+                return dbConn.saveJourney(params);
+
+            })
         });
 
         after(() => {
@@ -119,8 +145,8 @@ describe('Get daily report', () => {
 
         it("should return empty object for no db results", (done) => {
             chai.request(app)
-                .get('/reports/daily')
-                .set('content-type','application/json')
+                .get("/reports/daily")
+                .set("content-type","application/json")
                 .send({
                     date: "2004/05/21",
                 })
@@ -133,14 +159,14 @@ describe('Get daily report', () => {
 
         it("should return report for db results", (done) => {
             chai.request(app)
-            .get('/reports/daily')
-            .set('content-type','application/json')
+            .get("/reports/daily")
+            .set("content-type","application/json")
             .send({
                 date: testDate,
             })
             .end((_, res) => {
                 res.should.have.status(200);
-                // res.body.should.not.be.eql({});
+                res.body.should.not.be.eql({});
                 
                 let checkReport = {
                     totalPrice: 300.23,
@@ -155,11 +181,11 @@ describe('Get daily report', () => {
     })
 });
 
-describe('Get report for date range', () => {
-    describe('Input validation', () => {
+describe("Get report for date range", () => {
+    describe("Input validation", () => {
         it("should return error for no input", (done) => {
             chai.request(app)
-                .get('/reports/daterange')
+                .get("/reports/daterange")
                 .end((err, res) => {
                     res.should.have.status(500);
                     done();
@@ -168,8 +194,8 @@ describe('Get report for date range', () => {
 
         it("should return error for invalid input", (done) => {
             chai.request(app)
-                .get('/reports/daterange')
-                .set('content-type','application/json')
+                .get("/reports/daterange")
+                .set("content-type","application/json")
                 .send({
                     startDate: "2004/05/21",
                     endDate: "ABCD"
@@ -179,8 +205,8 @@ describe('Get report for date range', () => {
                 });
             
             chai.request(app)
-                .get('/reports/daterange')
-                .set('content-type','application/json')
+                .get("/reports/daterange")
+                .set("content-type","application/json")
                 .send({
                     startDate: "ABCD",
                     endDate: "2005/05/21"
@@ -190,8 +216,8 @@ describe('Get report for date range', () => {
                 });
 
             chai.request(app)
-                .get('/reports/daterange')
-                .set('content-type','application/json')
+                .get("/reports/daterange")
+                .set("content-type","application/json")
                 .send({
                     startDate: "2010/05/10",
                     endDate: "2005/05/21"
@@ -203,11 +229,11 @@ describe('Get report for date range', () => {
         });
     });
 
-    describe('Functionality testing', () => {
-        it('should return empty report for no db results', (done) => {
+    describe("Functionality testing", () => {
+        it("should return empty report for no db results", (done) => {
             chai.request(app)
-                .get('/reports/daterange')
-                .set('content-type','application/json')
+                .get("/reports/daterange")
+                .set("content-type","application/json")
                 .send({
                     startDate: "2005/05/10",
                     endDate: "2005/05/21"
