@@ -1,9 +1,7 @@
 const app = require("../app");
-const assert = require("assert");
 const chai = require("chai");
 const chai_http = require("chai-http");
 const dbConn = require("../src/dbConnection");
-const { check } = require("express-validator");
 const { expect } = require("chai");
 
 chai.use(chai_http);
@@ -125,16 +123,22 @@ describe("Get daily report", () => {
         let testDate = "2077/03/01";
         before(() => {
             dbConn.removeRecords(testDate);
-            const params = {
-                originAddress: "San Francisco, CA",
-                destinationAddress: "San Diego, CA",
-                price: 100.00,
-                date: testDate,
-                
-            }
-            return dbConn.saveJourney(params).then(() => {
-                params.price = 200.23;
-                return dbConn.saveJourney(params);
+            const params = [
+                {
+                    originAddress: "San Francisco, CA",
+                    destinationAddress: "San Diego, CA",
+                    price: 100.00,
+                    date: testDate,
+                },
+                {
+                    originAddress: "San Francisco, CA",
+                    destinationAddress: "San Diego, CA",
+                    price: 200.23,
+                    date: testDate,
+                }
+            ]
+            return dbConn.saveJourney(params[0]).then(() => {
+                return dbConn.saveJourney(params[1]);
 
             })
         });

@@ -18,7 +18,6 @@ router.get('/daily', [
     res.status(500).json({errors: errors.array()});
   } else {
     const { date } = req.body;
-    console.log(`DailyReport: ${date}`);
     dbConn.getDailyReport(date).then(report => {
       res.status(200).send(report);
     }).catch(err => {
