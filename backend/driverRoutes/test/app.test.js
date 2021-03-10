@@ -3,20 +3,6 @@ const { expect } = require('chai');
 const dbConn = require('../src/dbConnection');
 
 describe('Distance calculation testing', () => {
-    it("should return address for test data", (done) => {
-        originAddress = "San Francisco, CA"
-        destinationAddress = "San Diego, CA"
-        let resPromise = dbConn.calculateDistance(originAddress, destinationAddress);
-        resPromise.then(res => {
-            assert.strictEqual(807283,res);
-            done();
-          })
-          .catch(err => {
-            console.log(`Distance failure: ${err}`)
-            done(err);
-          });
-    });
-
     it("should throw error for invalid address", (done) => {
         originAddress = 1234
         destinationAddress = "San Diego, CA"
@@ -28,6 +14,37 @@ describe('Distance calculation testing', () => {
                 done();
             });
     });
+
+    describe('Testing distance-matrix-api', () => {
+        it("should return address distance for test data", (done) => {
+            originAddress = "San Francisco, CA"
+            destinationAddress = "San Diego, CA"
+            let resPromise = dbConn.calculateDistance(originAddress, destinationAddress);
+            resPromise.then(res => {
+                assert.strictEqual(807283,res);
+                done();
+              })
+              .catch(err => {
+                console.log(`Distance failure: ${err}`)
+                done(err);
+              });
+        });
+
+        it("should return address distance for test data", (done) => {
+            originAddress = "Slowackiego 3, Modzurow"
+            destinationAddress = "Wroclaw"
+            let resPromise = dbConn.calculateDistance(originAddress, destinationAddress);
+            resPromise.then(res => {
+                assert.strictEqual(152656,res);
+                done();
+              })
+              .catch(err => {
+                console.log(`Distance failure: ${err}`)
+                done(err);
+              });
+        });
+    })
+
 });
 
 describe('Saving journey testing', () => {
