@@ -1,5 +1,5 @@
-const assert = require("assert");
 const app = require("../app");
+const assert = require("assert");
 const chai = require("chai");
 const chai_http = require("chai-http");
 const dbConn = require("../src/dbConnection");
@@ -33,7 +33,7 @@ describe("Adding routes to history", () => {
     describe("Input validation", () => {
         it("should return error for no input", (done) => {
             chai.request(app)
-                .put("/journeys")
+                .post("/journeys")
                 .end((_, res) => {
                     res.should.have.status(500);
                     expect(res.body.error).to.not.be.null;
@@ -50,7 +50,7 @@ describe("Adding routes to history", () => {
 
         it("should return error for invalid input", (done) => {
             chai.request(app)
-                .put("/journeys")
+                .post("/journeys")
                 .set("content-type","application/json")
                 .send({
                     date: "ABCD",
@@ -73,7 +73,7 @@ describe("Adding routes to history", () => {
     describe('Saving journeys validation', () => {
         it("should save the journey with valid data", (done) => {
             chai.request(app)
-                .put("/journeys")
+                .post("/journeys")
                 .set("content-type","application/json")
                 .send({
                     date: "2021/03/07",

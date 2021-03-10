@@ -2,18 +2,24 @@ const sqlite3 = require('sqlite3').verbose();
 const {Client} = require("@googlemaps/google-maps-services-js");
 const client = new Client({});
 
-const dailySql = "SELECT SUM(price) as totalPrice, SUM(distance) as totalDistance FROM journeys WHERE date = ?";
-const dateRangeSql = "SELECT SUM(price) as totalPrice, SUM(distance) as totalDistance FROM journeys WHERE date > ? AND date < ?";
-const deleteSql = "DELETE FROM journeys WHERE date = ?"
+const dailySql = "SELECT SUM(price) as totalPrice, SUM(distance) as totalDistance FROM journeys WHERE journeyDate = ?";
+const dateRangeSql = "SELECT SUM(price) as totalPrice, SUM(distance) as totalDistance, AVG(price) as avgPrice, AVG(distance) as avgDistance FROM journeys WHERE journeyDate BETWEEN ? AND ?";
+const deleteSql = "DELETE FROM journeys WHERE journeyDate = ?"
 // open the database
-let db = new sqlite3.Database('./db/journeys.db', sqlite3.OPEN_READWRITE, (err) => {
-  if (err) {
-    throw Error(err.message);
-  }
-  console.log('Connected to the journeys database.');
-});
-db.run('CREATE TABLE IF NOT EXISTS journeys(date TEXT, originAddress TEXT, destinationAddress TEXT, price REAL, distance REAL)');
+let db;
+openDatabase = () => {
+  db = new sqlite3.Database('./db/journeys.db', sqlite3.OPEN_READWRITE, (err) => {
+    if (err) {
+      throw Error(err.message);
+    }
+    console.log('Connected to the journeys database.');
+  });
+  db.run('CREATE TABLE IF NOT EXISTS journeys(journeyDate DATE NOT NULL, originAddress TEXT, destinationAddress TEXT, price REAL, distance REAL)');
+}
 
+close = () => {
+  db.close();
+}
 
 
 calculateDistance = (originAddress, destinationAddress) => {
@@ -33,7 +39,7 @@ calculateDistance = (originAddress, destinationAddress) => {
 dbSave = (params) => {
   return new Promise((resolve, reject) => {
       db.run(
-        "INSERT INTO journeys(date,originAddress,destinationAddress,price,distance) VALUES(?,?,?,?,?)",
+        "INSERT INTO journeys(journeyDate,originAddress,destinationAddress,price,distance) VALUES(?,?,?,?,?)",
         [params.date,params.originAddress,params.destinationAddress,params.price, params.dist],
         (err) => {
           if(err) {
@@ -64,7 +70,8 @@ saveJourney = (params) => {
 
 removeRecords = (date) => {
   db.serialize(() => {
-    db.run(deleteSql, [date], (err) => {
+    const sql = date ? deleteSql : "DELETE FROM journeys"
+    db.run(sql, [date], (err) => {
       if(err) {
         throw new Error(`RemoveRecordsError: ${err}`);
       }
@@ -79,8 +86,8 @@ getDailyReport = (date) => {
         reject(new Error(`GetDailyReport: ${err}`));
       }
       if(row) {
-          row.totalPrice = row.totalPrice ? row.totalPrice/100 : null;
-          row.totalDistance = row.totalDistance ? row.totalDistance/1000 : null;
+          row.totalPrice = row.totalPrice ? Number((row.totalPrice/100).toFixed(2)) : null;
+          row.totalDistance = row.totalDistance ? Number((row.totalDistance/1000).toFixed(3)) : null;
       };
 
       resolve((row && row.totalPrice ? row : {}));
@@ -90,19 +97,24 @@ getDailyReport = (date) => {
 
 getDateRangeReport = (params) => {
   return new Promise((resolve, reject) => {
-    db.get(dateRangeSql, [params.startDate, params.endDate], (err, row) => {
+    const stmt = db.prepare(dateRangeSql, [params.startDate, params.endDate])
+    stmt.get([params.startDate, params.endDate],(err, row) => {
       if(err) {
         reject(new Error(`GetDateRangeReport error: ${err}`));
       }
       if(row) {
-        row.totalPrice = row.totalPrice ? row.totalPrice/100 : null;
-        row.totalDistance = row.totalDistance ? row.totalDistance/1000 : null;
+        row.totalPrice = row.totalPrice ? Number((row.totalPrice/100).toFixed(2)) : null;
+        row.avgPrice = row.avgPrice ? Number((row.avgPrice/100).toFixed(2)) : null;
+        row.totalDistance = row.totalDistance ? Number((row.totalDistance/1000).toFixed(3)) : null;
+        row.avgDistance = row.avgDistance ? Number((row.avgDistance/1000).toFixed(3)) : null;
       }
-      resolve(row && row.totalPrice ? row : {});
+      stmt.finalize();
+      resolve(row && row.totalPrice ? row : {})
     });
-  })
+
+  });
 }
 
 
 
-module.exports = { db, saveJourney, removeRecords, getDailyReport, getDateRangeReport, calculateDistance};
+module.exports = { close, openDatabase, saveJourney, removeRecords, getDailyReport, getDateRangeReport, calculateDistance};

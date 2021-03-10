@@ -1,4 +1,5 @@
 require('dotenv').config()
+require('./src/dbConnection').openDatabase();
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -9,7 +10,6 @@ var reportsRouter = require('./routes/reports');
 var journeysRouter = require('./routes/journeys');
 
 var app = express();
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');

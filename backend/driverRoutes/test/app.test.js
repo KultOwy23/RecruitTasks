@@ -51,10 +51,10 @@ describe('Saving journey testing', () => {
         } 
         dbConn.saveJourney(params).then(res => {
             expect(res).to.not.be.null;
-            console.log(`SaveJourney res: ${res}`);
+            expect(res.message).to.be.eql('Saved journey!')
+            expect(res.distance).to.be.eql(807283)
             done();
         }).catch(err => {
-            console.log(`Save Journey error: ${err}`);
             done(err);
         })
     });
@@ -63,7 +63,7 @@ describe('Saving journey testing', () => {
 const testDate = "2021/03/06";
 describe('Getting daily report', () => {
     before(() => {
-        dbConn.removeRecords(testDate);
+        dbConn.removeRecords();
         let params = {
             originAddress: "San Francisco, CA",
             destinationAddress: "San Diego, CA",
@@ -80,7 +80,7 @@ describe('Getting daily report', () => {
     });
 
     after(() => {
-        dbConn.removeRecords(testDate);
+        dbConn.removeRecords();
     });
 
     it("should calculate right values", (done) => {
@@ -92,5 +92,54 @@ describe('Getting daily report', () => {
         }).catch(err => {
             done(err);
         })
+    })
+});
+
+describe("Getting date range report", () => {
+    before(() => {
+        dbConn.removeRecords();
+        let params = [
+            {
+                originAddress: "San Francisco, CA",
+                destinationAddress: "San Diego, CA",
+                price: 100.00,
+                date: '2021/03/04',   
+            },
+            {
+                originAddress: "San Francisco, CA",
+                destinationAddress: "San Diego, CA",
+                price: 100.23,
+                date: '2021/03/05',   
+            },
+            {
+                originAddress: "San Francisco, CA",
+                destinationAddress: "San Diego, CA",
+                price: 200.40,
+                date: '2021/03/06',   
+            },
+        
+        ]
+        
+        return dbConn.saveJourney(params[0]).then((res) => {
+            return dbConn.saveJourney(params[1]).then(() => {
+                return dbConn.saveJourney(params[2]);
+            })
+        });
+    })
+
+    after(() => {
+        dbConn.removeRecords()
+    });
+
+    it("should return date range report", (done) => {
+        dbConn.getDateRangeReport({startDate: '2021/03/04', endDate: '2021/03/06'})
+            .then((res) => {
+                expect(res.totalPrice).to.be.eql(400.63);
+                expect(res.totalDistance).to.be.eql(2421.849);
+                
+                done();
+            }).catch((err) => {
+                done(err);
+            })
     })
 })

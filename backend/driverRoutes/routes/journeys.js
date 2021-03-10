@@ -3,7 +3,7 @@ const { check, validationResult } = require('express-validator');
 const { saveJourney } = require('../src/dbConnection');
 var router = express.Router();
 
-router.put('/', [
+router.post('/', [
     check('originAddress')
         .not().isEmpty()
         .withMessage('is required'),
