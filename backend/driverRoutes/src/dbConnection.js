@@ -8,7 +8,7 @@ const deleteSql = "DELETE FROM journeys WHERE journeyDate = ?"
 // open the database
 let db;
 openDatabase = () => {
-  db = new sqlite3.Database('./db/journeys.db', sqlite3.OPEN_READWRITE, (err) => {
+  db = new sqlite3.Database('./db/journeys.db', sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
     if (err) {
       throw Error(err.message);
     }
