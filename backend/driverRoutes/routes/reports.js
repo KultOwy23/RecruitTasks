@@ -27,18 +27,21 @@ router.get('/daily', [
 });
 
 router.get('/daterange', [
-  query('endDate').toDate(),
+  check('endDate').toDate(),
   check('startDate').toDate().custom((startDate, {req}) => {
     const { endDate } = req.query;
     const errors = [];
     if(!startDate) {
-      errors.push('StartDate is required');
+      errors.push('StartDate is required and has to be date');
     } 
     if(!endDate) {
-      errors.push('EndDate is required');
+      errors.push('EndDate is required and has to be date');
+    }
+    if(errors.length > 0) {
+      throw new Error(errors.join(','));
     }
     if(startDate.getTime() >= endDate.getTime()) {
-      errors.push('EndDate must (startDate, endDatebe after the startDate');
+      errors.push('EndDate must be after the startDate');
     }
     if(errors.length > 0) {
       throw new Error(errors.join(','));
