@@ -73,7 +73,7 @@ All files            |   93.62 |    83.33 |   88.24 |   93.62 |
 ./journeys
 ```
 * Method: **POST**
-* Input parameters: 
+* Input parameters (in the request body): 
   ```js
     {
       date: Date,
@@ -95,7 +95,7 @@ All files            |   93.62 |    83.33 |   88.24 |   93.62 |
 ./reports/daily
 ```
 * Method: **GET**
-* Input parameters: 
+* Input parameters (in the request body): 
   ```js
     {
       date: Date,
@@ -114,7 +114,7 @@ All files            |   93.62 |    83.33 |   88.24 |   93.62 |
 ./reports/daterange
 ```
 * Method: **GET**
-* Input parameters: 
+* Input parameters (in the request body): 
   ```js
     {
       startDate: Date,
