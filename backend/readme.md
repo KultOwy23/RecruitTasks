@@ -70,9 +70,8 @@ All files            |   93.62 |    83.33 |   88.24 |   93.62 |
 
 #### Dodawanie przejazdu:
 ```
-./journeys
+POST ./journeys
 ```
-* Method: **POST**
 * Input parameters (in the request body): 
   ```js
     {
@@ -92,10 +91,9 @@ All files            |   93.62 |    83.33 |   88.24 |   93.62 |
 
 #### Pobieranie raportow - raport dzienny
 ```
-./reports/daily
+GET ./reports/daily?date=2021-03-04
 ```
-* Method: **GET**
-* Input parameters (in the request body): 
+* Input parameters: 
   ```js
     {
       date: Date,
@@ -111,10 +109,9 @@ All files            |   93.62 |    83.33 |   88.24 |   93.62 |
 
 #### Pobieranie raportow - raport pomiedzy datami
 ```
-./reports/daterange
+GET ./reports/daterange?startDate=[DATE]&endDate=[DATE]
 ```
-* Method: **GET**
-* Input parameters (in the request body): 
+* Input parameters: 
   ```js
     {
       startDate: Date,

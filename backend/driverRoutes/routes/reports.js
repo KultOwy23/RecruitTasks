@@ -1,6 +1,6 @@
 const e = require('express');
 var express = require('express');
-const { check, body, validationResult } = require('express-validator');
+const { check, query, validationResult } = require('express-validator');
 const  dbConn  = require('../src/dbConnection');
 var router = express.Router();
 
@@ -17,7 +17,7 @@ router.get('/daily', [
   if(!errors.isEmpty()) {
     res.status(500).json({errors: errors.array()});
   } else {
-    const { date } = req.body;
+    const { date } = req.query;
     dbConn.getDailyReport(date).then(report => {
       res.status(200).send(report);
     }).catch(err => {
@@ -27,9 +27,9 @@ router.get('/daily', [
 });
 
 router.get('/daterange', [
-  body('endDate').toDate(),
+  query('endDate').toDate(),
   check('startDate').toDate().custom((startDate, {req}) => {
-    const { endDate } = req.body;
+    const { endDate } = req.query;
     const errors = [];
     if(!startDate) {
       errors.push('StartDate is required');
@@ -47,11 +47,10 @@ router.get('/daterange', [
   })
 ], function(req, res, next) {
   const errors = validationResult(req);
-
   if(!errors.isEmpty()) {
     res.status(500).json({ errors: errors.array()});
   } else {
-    dbConn.getDateRangeReport(req.body).then(report => {
+    dbConn.getDateRangeReport(req.query).then(report => {
       res.status(200).send(report)
     }).catch(err => {
       throw Error(err);

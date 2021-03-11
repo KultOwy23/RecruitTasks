@@ -74,7 +74,7 @@ describe("Adding routes to history", () => {
                 .post("/journeys")
                 .set("content-type","application/json")
                 .send({
-                    date: "2021/03/07",
+                    date: '2021-03-07',
                     originAddress: "San Francisco, CA",
                     destinationAddress: "San Diego, CA",
                     price: 200.99
@@ -103,14 +103,11 @@ describe("Get daily report", () => {
 
         it("should return error for invalid input", (done) => {
             chai.request(app)
-                .get("/reports/daily")
+                .get("/reports/daily?date=ABCD")
                 .set("content-type","application/json")
-                .send({
-                    date: "ABCD",
-                })
                 .end((_, res) => {
                     const expectedErrorMessages = [
-                        {"value": "ABCD", "msg": "has to be date", "param": "date", "location": "body"}
+                        {"value": "ABCD", "msg": "has to be date", "param": "date", "location": "query"}
                     ]
                     res.should.have.status(500);
                     expect(res.body.errors).to.eql(expectedErrorMessages);
@@ -120,7 +117,7 @@ describe("Get daily report", () => {
     });
 
     describe("Functionality testing", () => {
-        let testDate = "2077/03/01";
+        let testDate = '2077-03-01';
         before(() => {
             dbConn.removeRecords(testDate);
             const params = [
@@ -149,11 +146,8 @@ describe("Get daily report", () => {
 
         it("should return empty object for no db results", (done) => {
             chai.request(app)
-                .get("/reports/daily")
+                .get("/reports/daily?date=2004-05-21")
                 .set("content-type","application/json")
-                .send({
-                    date: "2004/05/21",
-                })
                 .end((_, res) => {
                     res.should.have.status(200);
                     res.body.should.be.eql({});
@@ -163,7 +157,7 @@ describe("Get daily report", () => {
 
         it("should return report for db results", (done) => {
             chai.request(app)
-            .get("/reports/daily")
+            .get(`/reports/daily?date=${testDate}`)
             .set("content-type","application/json")
             .send({
                 date: testDate,
@@ -198,34 +192,22 @@ describe("Get report for date range", () => {
 
         it("should return error for invalid input", (done) => {
             chai.request(app)
-                .get("/reports/daterange")
+                .get("/reports/daterange?startDate=2004-05-21&endDate=ABCD")
                 .set("content-type","application/json")
-                .send({
-                    startDate: "2004/05/21",
-                    endDate: "ABCD"
-                })
                 .end((_, res) => {
                     res.should.have.status(500);
                 });
             
             chai.request(app)
-                .get("/reports/daterange")
+                .get("/reports/daterange?startDate=ABCD&endDate=2005-05-21")
                 .set("content-type","application/json")
-                .send({
-                    startDate: "ABCD",
-                    endDate: "2005/05/21"
-                })
                 .end((_, res) => {
                     res.should.have.status(500);
                 });
 
             chai.request(app)
-                .get("/reports/daterange")
+                .get("/reports/daterange?startDate=2010-05-10&endDate=2005-05-21")
                 .set("content-type","application/json")
-                .send({
-                    startDate: "2010/05/10",
-                    endDate: "2005/05/21"
-                })
                 .end((_, res) => {
                     res.should.have.status(500);
                     done();
@@ -236,13 +218,10 @@ describe("Get report for date range", () => {
     describe("Functionality testing", () => {
         it("should return empty report for no db results", (done) => {
             chai.request(app)
-                .get("/reports/daterange")
+                .get("/reports/daterange?startDate=2005-05-10&endDate=2005-05-21")
                 .set("content-type","application/json")
-                .send({
-                    startDate: "2005/05/10",
-                    endDate: "2005/05/21"
-                })
-                .end((_, res) => {
+                .end((err, res) => {
+                    console.log(`Error: ${JSON.stringify(err)}`)
                     res.should.have.status(200);
                     res.body.should.be.eql({});
                     done();
