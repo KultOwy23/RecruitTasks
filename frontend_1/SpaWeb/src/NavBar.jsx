@@ -8,7 +8,7 @@ function formatName(user) {
 class UserPanel extends React.Component {
     render() {
         return (
-            <p>User: {this.props.user.firstName}</p>
+            <p class="welcome">{this.props.user.firstName}</p>
         )
     }
 }
@@ -17,6 +17,7 @@ class NavBar extends React.Component {
         return (
             <div>
                 <div class="logo"/>
+                <h1>SpaWeb</h1>
                 <UserPanel user={this.props.user}/>
             </div>
         );

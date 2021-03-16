@@ -1,14 +1,14 @@
-$primary-color: #064273;
-$text-color: 	#76b6c4;
+$primary: #005173;
+$accent: 	#4a626c;
 $logo-img: url('./icon.png');
 
 body {
-    color: $primary-color;
+    color: $primary;
     font-weight: bold;
 }
 
 .welcome {
-    color: $text-color;
+    color: $accent;
     font-weight: normal;
 }
 
