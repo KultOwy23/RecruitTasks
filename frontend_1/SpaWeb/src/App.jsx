@@ -1,5 +1,19 @@
-import React, { Component } from 'react';
+import React from 'react';
+import NavBar from './NavBar';
 
-const element = <h1>Hello World</h1>
 
-export default element;
+const user = {
+    firstName: 'Jose',
+    lastName: 'Arcadio Morales!'
+}
+
+function App() {
+    return (
+        <div>
+            <NavBar user={user}/>
+        </div>
+    )
+    
+    
+}
+export default App;
