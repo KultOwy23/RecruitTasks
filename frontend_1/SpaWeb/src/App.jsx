@@ -1,10 +1,12 @@
 import React from 'react';
 import NavBar from './NavBar';
 
+import Icon from './icon.png';
+
 
 const user = {
-    firstName: 'Jose',
-    lastName: 'Arcadio Morales!'
+    firstName: 'Arcadio Morales!',
+    avatar: Icon
 }
 
 function App() {

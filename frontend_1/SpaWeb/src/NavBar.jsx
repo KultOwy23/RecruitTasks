@@ -1,25 +1,36 @@
 import React from 'react';
-// import Icon from './icon.png';
+import Icon from './icon.png';
 
 function formatName(user) {
     return user.firstName + ' ' + user.lastName;
 }
 
+function Avatar(props) {
+    if(props.user.avatar) {
+        return <img class="Avatar" src={props.user.avatar}></img>
+    }
+    return <img class="Avatar" src={Icon}></img>
+}
+
 class UserPanel extends React.Component {
     render() {
         return (
-            <p class="welcome">{this.props.user.firstName}</p>
+            <div class="UserPanel">
+                <Avatar user={this.props.user}/>
+                <span class="UserLogin">{this.props.user.firstName}</span>
+            </div>
         )
     }
 }
 class NavBar extends React.Component {
     render() {
         return (
-            <div>
-                <div class="logo"/>
-                <h1>SpaWeb</h1>
+            <nav>
+                <a href="/">
+                    <img class="logo" src={Icon} />
+                </a>
                 <UserPanel user={this.props.user}/>
-            </div>
+            </nav>
         );
     }
 }

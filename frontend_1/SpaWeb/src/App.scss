@@ -1,19 +1,63 @@
 $primary: #005173;
 $accent: 	#4a626c;
 $logo-img: url('./icon.png');
+$nav-bar-height: 60px;
+$big-font-size: 20px;
+$normal-font-size: 16px;
+$small-font-size: 12px;
+
+$shadow-color: #666;
 
 body {
     color: $primary;
     font-weight: bold;
+    font-size: $normal-font-size;
+    margin: 0px;
+    
 }
-
-.welcome {
+nav {
+    height: $nav-bar-height;
+    overflow: hidden;
+    padding: 0 50 0 50;
+    box-shadow: 0 1px 5px 0px  $shadow-color;
+}
+.UserLogin {
     color: $accent;
     font-weight: normal;
+    font-size: $big-font-size;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0;
+}
+
+.UserPanel {
+    display: block;
+    float: right;
+    margin-top: $nav-bar-height*0.2;
+    margin-bottom: $nav-bar-height*0.2;
+    height: $nav-bar-height*0.5;
+    padding: 3px;
+
+}
+
+.UserPanel:hover {
+    border-radius: 0 0 5px 5px;
+    box-shadow: 0px 1px 1px 0px $shadow-color;
 }
 
 .logo {
-    background-image: $logo-img;
-    width: 50px;
-    height: 50px;
+    display: inline-block;
+    margin-top: $nav-bar-height*0.2;
+    margin-bottom: $nav-bar-height*0.2;
+    height: $nav-bar-height*0.6;
+}
+
+.Avatar {
+    display: inline-block;
+    vertical-align: middle;
+    height: inherit;
+    margin:0;
+    margin-right: 5px;
+    margin-left: 5px;
+    border-radius: 50%;
 }
