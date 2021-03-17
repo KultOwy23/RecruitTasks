@@ -7,9 +7,9 @@ function formatName(user) {
 
 function Avatar(props) {
     if(props.user.avatar) {
-        return <img class="Avatar" src={props.user.avatar}></img>
+        return <img className="Avatar" src={props.user.avatar} alt="avatar"></img>
     }
-    return <img class="Avatar" src={Icon}></img>
+    return <img className="Avatar" src={Icon} alt="avatar"></img>
 }
 
 class UserPanel extends React.Component {
@@ -19,9 +19,9 @@ class UserPanel extends React.Component {
 
     render() {
         return (
-            <div class="UserPanel" onClick={this.login}>
+            <div className="UserPanel" onClick={this.login}>
                 <Avatar user={this.props.user}/>
-                <span class="UserLogin">{this.props.user.firstName}</span>
+                <span className="UserLogin">{this.props.user.firstName}</span>
             </div>
         )
     }
@@ -31,7 +31,7 @@ class NavBar extends React.Component {
         return (
             <nav>
                 <a href="/">
-                    <img class="logo" src={Icon} />
+                    <img className="logo" src={Icon} alt="logo"/>
                 </a>
                 <UserPanel user={this.props.user}/>
             </nav>
