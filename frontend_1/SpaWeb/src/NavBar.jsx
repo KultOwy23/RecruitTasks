@@ -13,9 +13,13 @@ function Avatar(props) {
 }
 
 class UserPanel extends React.Component {
+    login() {
+        console.log(`Login clicked!`);
+    }
+
     render() {
         return (
-            <div class="UserPanel">
+            <div class="UserPanel" onClick={this.login}>
                 <Avatar user={this.props.user}/>
                 <span class="UserLogin">{this.props.user.firstName}</span>
             </div>
