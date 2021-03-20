@@ -12,5 +12,3 @@ Gdy jesteśmy zalogowani, na belce pokazujemy nazwę użytkownika a w popup-menu
 --- 
 
 ## Implementacja
-
-You can check the code here [https://codesandbox.io/s/spa-web-demo-3677x](https://codesandbox.io/s/spa-web-demo-3677x)
