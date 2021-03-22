@@ -1,6 +1,7 @@
 import React from 'react';
 import NavBar from './NavBar';
 import Icon from './icon.png';
+import { StylesProvider } from "@material-ui/core/styles";
 
 const user = {
     firstName: 'Arcadio Morales!',
@@ -9,9 +10,9 @@ const user = {
 
 function App() {
     return (
-        <div>
+        <StylesProvider injectFirst>
             <NavBar user={user}/>
-        </div>
+        </StylesProvider>
     )
     
     

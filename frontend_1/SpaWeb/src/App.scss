@@ -1,5 +1,6 @@
-$primary: #005173;
-$accent: 	#4a626c;
+$primary: #283962;
+$secondary: #2C5E70;
+$accent: 	#73C3B9;
 $logo-img: url('./icon.png');
 $nav-bar-height: 60px;
 $big-font-size: 20px;
@@ -20,9 +21,10 @@ nav {
     overflow: hidden;
     box-shadow: 0 1px 5px 0px  $shadow-color;
 }
+
 .UserLogin {
     cursor: inherit;
-    color: $accent;
+    color: $primary;
     font-weight: normal;
     font-size: $big-font-size;
     display: inline-block;
@@ -45,11 +47,18 @@ nav {
 .UserPanelRoot {
     letter-spacing: normal;
     text-transform: unset;
-    background-color: $primary;
+    border-radius: 0;
+}
+
+.UserPanelRoot:hover {
+    background-color: $accent;
 }
 
 .UserPanelText {
     padding: 2px 2px;
+}
+
+.UserPanelMenu {
 }
 
 

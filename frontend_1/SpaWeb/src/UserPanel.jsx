@@ -42,8 +42,14 @@ export default function UserPanel(props) {
         </Button>
         
         <Menu
+          classes={{
+            paper: "UserPanelMenu"
+          }}
           id="simple-menu"
           anchorEl={anchorEl}
+          getContentAnchorEl={null}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          transformOrigin={{ vertical: "bottom", horizontal: "right" }}
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
