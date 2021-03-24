@@ -38,10 +38,15 @@ nav {
     height: inherit;
 }
 
-.UserPanelLabel {
+.UserPanel {
     margin-top: $nav-bar-height*0.2;
     margin-bottom: $nav-bar-height*0.1;
     height: $nav-bar-height*0.5;
+}
+
+.UserPanelLabel {
+    height: inherit;
+    margin:0;
 }
 
 .UserPanelRoot {
@@ -53,14 +58,6 @@ nav {
 .UserPanelRoot:hover {
     background-color: $accent;
 }
-
-.UserPanelText {
-    padding: 2px 2px;
-}
-
-.UserPanelMenu {
-}
-
 
 .logo {
     display: inline-block;

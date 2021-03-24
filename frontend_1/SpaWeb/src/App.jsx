@@ -4,7 +4,6 @@ import Icon from './icon.png';
 import { StylesProvider } from "@material-ui/core/styles";
 
 const user = {
-    firstName: 'Arcadio Morales!',
     avatar: Icon
 }
 
@@ -14,7 +13,5 @@ function App() {
             <NavBar user={user}/>
         </StylesProvider>
     )
-    
-    
 }
 export default App;
