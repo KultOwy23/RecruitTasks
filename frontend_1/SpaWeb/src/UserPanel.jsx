@@ -25,14 +25,10 @@ function UserLabel(props) {
 class UserPanel extends React.Component {
   constructor(props) {
     super(props);
-    this.handleLoginClick = this.handleLoginClick.bind(this);
-    this.handleLogoutClick = this.handleLogoutClick.bind(this);
-    this.openMenu = this.openMenu.bind(this);
-    this.closeMenu = this.closeMenu.bind(this);
     this.state = {anchorEl: null};
   }
 
-  handleLoginClick() {
+  handleLoginClick = () => {
     axios.get(loginURL)
     .then(response => {
         const user = {
@@ -47,7 +43,7 @@ class UserPanel extends React.Component {
     this.closeMenu();
   }
 
-  handleLogoutClick() {
+  handleLogoutClick = () => {
     axios.get(loginURL)
       .then(res => {
         this.props.onUserLogout();
@@ -57,11 +53,11 @@ class UserPanel extends React.Component {
     this.closeMenu();
   }
 
-  openMenu(event) {
+  openMenu = (event) => {
     this.setState({anchorEl: event.currentTarget});
   };
   
-  closeMenu() {
+  closeMenu = () => {
     this.setState({anchorEl: null});
   }
 
